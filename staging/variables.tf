@@ -7,5 +7,10 @@ variable "aws_region" {
 variable "bucket_name" {
   type = string
   description = "S3 bucket for staging environment"
-  default = "staging_bucket"
+  default = "web-bucket"
+}
+
+variable "environment" {
+  type = string
+  default = "staging"
 }

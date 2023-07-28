@@ -4,13 +4,11 @@ terraform {
       source = "hashicorp/aws"
       version = "~>5.0"
     }
-  }
 
-  # Store state files in S3 bucket
-  backend "s3" {
-    bucket = "value"
-    key = "value"
-    region = "value"
+    random = {
+      source = "hashicorp/random"
+      version = "~>3.5.0"
+    }
   }
 }
 
@@ -24,5 +22,6 @@ module "s3_staging" {
   source = "../modules/s3/"
 
   # Set variables
-  bucket_name = var.bucket_name
+  bucket_name = local.s3_bucket_name
+  bucket_tags = local.common_tags
 }
