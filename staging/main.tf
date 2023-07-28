@@ -13,3 +13,16 @@ terraform {
     region = "value"
   }
 }
+
+# Provider
+provider "aws" {
+  region = var.aws_region
+}
+
+# Staging environment
+module "s3_staging" {
+  source = "../modules/s3/"
+
+  # Set variables
+  bucket_name = var.bucket_name
+}

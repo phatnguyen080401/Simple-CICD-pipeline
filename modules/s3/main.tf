@@ -1,12 +1,12 @@
 # S3 bucket config
-resource "aws_s3_bucket" "staging_bucket" {
-  bucket = var.s3_bucket_name
+resource "aws_s3_bucket" "web_bucket" {
+  bucket = var.bucket_name
   force_destroy = true
 }
 
 # S3 bucket policy
-resource "aws_s3_bucket_policy" "staging_bucket_policy" {
-  bucket = aws_s3_bucket.staging_bucket.id
+resource "aws_s3_bucket_policy" "web_bucket_policy" {
+  bucket = aws_s3_bucket.web_bucket.id
   policy = <<POLICY
 {
   "Version": "2012-10-17",
@@ -17,7 +17,7 @@ resource "aws_s3_bucket_policy" "staging_bucket_policy" {
         "AWS": "${data.aws_elb_service_account.root.arn}"
       },
       "Action": "s3:PutObject",
-      "Resource": "arn:aws:s3:::${local.s3_bucket_name}/alb-logs/*"
+      "Resource": "arn:aws:s3:::${local.bucket_name}/alb-logs/*"
     },
     {
       "Effect": "Allow",
@@ -25,7 +25,7 @@ resource "aws_s3_bucket_policy" "staging_bucket_policy" {
         "Service": "delivery.logs.amazonaws.com"
       },
       "Action": "s3:PutObject",
-      "Resource": "arn:aws:s3:::${local.s3_bucket_name}/alb-logs/*",
+      "Resource": "arn:aws:s3:::${local.bucket_name}/alb-logs/*",
       "Condition": {
         "StringEquals": {
           "s3:x-amz-acl": "bucket-owner-full-control"
@@ -38,7 +38,7 @@ resource "aws_s3_bucket_policy" "staging_bucket_policy" {
         "Service": "delivery.logs.amazonaws.com"
       },
       "Action": "s3:GetBucketAcl",
-      "Resource": "arn:aws:s3:::${local.s3_bucket_name}"
+      "Resource": "arn:aws:s3:::${local.bucket_name}"
     }
   ]
 }
