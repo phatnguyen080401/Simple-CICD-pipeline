@@ -9,6 +9,5 @@ resource "aws_s3_bucket" "web_bucket" {
 # S3 Bucket object
 resource "aws_s3_object" "web_bucket_object" {
   bucket = aws_s3_bucket.web_bucket.id
-  key    = "${var.bucket_object}/application.zip"
-  source = "application.zip"
+  key    = "${var.bucket_object}/"
 }
