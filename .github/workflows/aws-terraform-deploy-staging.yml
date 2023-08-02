@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Package source code to deployment
-        run: zip -r application.zip src/*
+        run: zip -r -j application.zip src/
 
       - name: Upload ZIP file
         uses: actions/upload-artifact@v3
@@ -94,7 +94,7 @@ jobs:
           aws elasticbeanstalk create-application-version \
           --application-name simple-webapp \
           --source-bundle S3Bucket="$S3_BUCKET_NAME",S3Key="webapp-src/application.zip" \
-          --version-label "ver-${{ github.sha }}" \
+          --version-label "ver-${{ github.sha }}" 
 
       - name: Deploy ElasticBeanstalk Application Version
         run: aws elasticbeanstalk update-environment --environment-name staging-env --version-label "ver-${{ github.sha }}"
