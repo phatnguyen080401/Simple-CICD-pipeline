@@ -93,7 +93,7 @@ jobs:
         run: |
           aws elasticbeanstalk create-application-version \
           --application-name simple-webapp \
-          --source-bundle S3Bucket=S3_BUCKET_NAME, S3Key="webapp-src/application.zip" \
+          --source-bundle S3Bucket=$S3_BUCKET_NAME, S3Key="webapp-src/application.zip" \
           --version-label "ver-${{ github.sha }}" \
 
       - name: Deploy ElasticBeanstalk Application Version
