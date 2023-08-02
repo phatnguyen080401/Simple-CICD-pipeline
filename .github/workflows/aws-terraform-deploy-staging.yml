@@ -37,27 +37,27 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: terraform -chdir=staging/ init
+        run: terraform -chdir=./staging init
 
       - name: Terraform Format
         id: fmt
-        run: terraform -chdir=staging/ fmt -recursive
+        run: terraform -chdir=./staging fmt -recursive
 
       - name: Terraform Validate
         id: validate
-        run: terraform -chdir=staging/ validate -no-color
+        run: terraform -chdir=./staging validate -no-color
 
       - name: Terraform Plan
         id: plan
-        run: terraform -chdir=staging/ plan
+        run: terraform -chdir=./staging plan
 
       - name: Terraform Apply
         id: apply
-        run: terraform -chdir=staging/ apply -auto-approve
+        run: terraform -chdir=./staging apply -auto-approve
 
       - name: Retrieve S3 bucket url
         id: s3-url
-        run: terraform -chdir=staging/ output >> $GITHUB_OUTPUT
+        run: terraform -chdir=./staging output >> $GITHUB_OUTPUT
 
   deploy:
     runs-on: ubuntu-latest
