@@ -30,6 +30,8 @@ jobs:
       s3-bucket-url: ${{ steps.s3-url.outputs.s3-bucket-url }}
 
     steps:
+      - uses: actions/checkout@v2
+      
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
