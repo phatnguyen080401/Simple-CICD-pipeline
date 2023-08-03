@@ -1,8 +1,6 @@
 name: aws-terraform-deploy-staging
 
 on:
-  push:
-    branches: [master]
   pull_request:
     branches: [master]
 
