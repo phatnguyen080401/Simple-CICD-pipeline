@@ -8,6 +8,7 @@ on:
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  TF_WORKSPACE: "staging"
 
 jobs:
   build:
@@ -39,32 +40,37 @@ jobs:
         with:
           terraform_wrapper: false
 
-      - name: Terraform Init
+      - name: Terraform current workspace
+        id: workspace
+        if: "$(terraform workspace show)" == "staging"
+        run: echo "In staging workspace"
+
+      - name: Terraform init
         id: init
-        run: terraform -chdir=staging/ init
+        run: terraform -chdir=infrastructure/ init
 
-      - name: Terraform Format
+      - name: Terraform format
         id: fmt
-        run: terraform -chdir=staging/ fmt -recursive
+        run: terraform -chdir=infrastructure/ fmt -recursive
 
-      - name: Terraform Validate
+      - name: Terraform validate
         id: validate
-        run: terraform -chdir=staging/ validate -no-color
+        run: terraform -chdir=infrastructure/ validate -no-color
 
-      - name: Terraform Plan
+      - name: Terraform plan
         id: plan
-        run: terraform -chdir=staging/ plan
+        run: terraform -chdir=infrastructure/ plan
 
-      - name: Terraform Apply
+      - name: Terraform apply
         id: apply
-        run: terraform -chdir=staging/ apply -auto-approve
+        run: terraform -chdir=infrastructure/ apply -auto-approve
 
-      - name: Retrieve S3 bucket url
+      - name: Export terraform output
         id: s3
         run: |
-          echo "s3-bucket-name=$(terraform -chdir=staging/ output -raw s3-bucket-name)" >> $GITHUB_OUTPUT
-          echo "s3-bucket-object-name=$(terraform -chdir=staging/ output -raw s3-bucket-object-name)" >> $GITHUB_OUTPUT
-          echo "s3-bucket-url=$(terraform -chdir=staging/ output -raw s3-bucket-url)" >> $GITHUB_OUTPUT
+          echo "s3-bucket-name=$(terraform -chdir=infrastructure/ output -raw s3-bucket-name)" >> $GITHUB_OUTPUT
+          echo "s3-bucket-object-name=$(terraform -chdir=infrastructure/ output -raw s3-bucket-object-name)" >> $GITHUB_OUTPUT
+          echo "s3-bucket-url=$(terraform -chdir=infrastructure/ output -raw s3-bucket-url)" >> $GITHUB_OUTPUT
 
   deploy:
     runs-on: ubuntu-latest
@@ -74,8 +80,6 @@ jobs:
       S3_BUCKET_NAME: ${{ needs.setup-infra.outputs.s3-bucket-name }}
       S3_BUCKET_OBJECT_NAME: ${{ needs.setup-infra.outputs.s3-bucket-object-name }}
     steps:
-      - uses: actions/checkout@v3
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -93,8 +97,11 @@ jobs:
         run: |
           aws elasticbeanstalk create-application-version \
           --application-name simple-webapp \
-          --source-bundle S3Bucket="$S3_BUCKET_NAME",S3Key="webapp-src/application.zip" \
+          --source-bundle S3Bucket="$S3_BUCKET_NAME",S3Key="${S3_BUCKET_OBJECT_NAME}application.zip" \
           --version-label "ver-${{ github.sha }}" 
 
       - name: Deploy ElasticBeanstalk Application Version
-        run: aws elasticbeanstalk update-environment --environment-name staging-env --version-label "ver-${{ github.sha }}"
+        run: |
+          aws elasticbeanstalk update-environment \
+          --environment-name $TF_WORKSPACE-env \
+          --version-label "ver-${{ github.sha }}"
