@@ -6,7 +6,7 @@ resource "aws_elastic_beanstalk_application" "webapp" {
 }
 
 resource "aws_elastic_beanstalk_environment" "staging_env" {
-  name                = var.ebs_env_name
+  name                = "${terraform.workspace}-env"
   application         = aws_elastic_beanstalk_application.webapp.name
   solution_stack_name = var.ebs_solution_stack_name
   tags                = var.ebs_tags

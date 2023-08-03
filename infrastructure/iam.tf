@@ -10,8 +10,8 @@ data "aws_iam_policy_document" "assume_policy" {
 
 # Create IAM role
 resource "aws_iam_role" "ebs_ec2_role" {
-  name               = var.iam_role_name
-  assume_role_policy = data.aws_iam_policy_document.assume_policy.json
+  name                = var.iam_role_name
+  assume_role_policy  = data.aws_iam_policy_document.assume_policy.json
   managed_policy_arns = [
     "arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier",
     "arn:aws:iam::aws:policy/AWSElasticBeanstalkMulticontainerDocker",

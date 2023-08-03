@@ -13,7 +13,7 @@ terraform {
 
   backend "s3" {
     bucket = "terraform-backend-0"
-    key    = "staging/terraform.tfstate"
+    key    = "terraform.tfstate"
     region = "ap-southeast-1"
   }
 }
@@ -41,10 +41,8 @@ module "ebs_staging" {
 
   # Set variables
   ebs_name                  = var.ebs_name
-  ebs_env_name              = var.ebs_env_name
   ebs_solution_stack_name   = var.ebs_solution_stack_name
   ebs_tags                  = local.common_tags
-  ebs_app_version_name      = var.ebs_app_version_name
   s3_bucket_id              = module.s3_staging.web_bucket.id
   s3_bucket_object_id       = module.s3_staging.web_bucket_object.id
   ec2_instance_type         = var.ec2_instance_type

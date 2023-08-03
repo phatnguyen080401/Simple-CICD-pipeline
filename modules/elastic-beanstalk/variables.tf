@@ -2,10 +2,6 @@ variable "ebs_name" {
   type = string
 }
 
-variable "ebs_env_name" {
-  type = string
-}
-
 variable "ebs_solution_stack_name" {
   type = string
 }
@@ -14,10 +10,6 @@ variable "ebs_tags" {
   type        = map(string)
   description = "Elastic Beanstalk tags"
   default     = {}
-}
-
-variable "ebs_app_version_name" {
-  type = string
 }
 
 variable "s3_bucket_id" {
