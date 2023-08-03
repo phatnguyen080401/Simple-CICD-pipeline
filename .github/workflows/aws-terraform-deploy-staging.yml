@@ -2,8 +2,7 @@ name: aws-terraform-deploy-staging
 
 on:
   push:
-    branches:
-      - staging
+    branches: [staging]
 
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
