@@ -24,7 +24,7 @@ provider "aws" {
 }
 
 # S3 bucket 
-module "s3_staging" {
+module "s3_bucket" {
   source = "../modules/s3/"
 
   # Set variables
@@ -34,17 +34,16 @@ module "s3_staging" {
 }
 
 # Elastic Beanstalk 
-module "ebs_staging" {
-  source = "../modules/elastic-beanstalk/"
+module "elastic_beanstalk" {
+  source = "../modules/elastic_beanstalk/"
 
-  depends_on = [module.s3_staging]
+  depends_on = [module.s3_bucket]
 
   # Set variables
-  ebs_name                  = var.ebs_name
+  ebs_app_name              = var.ebs_app_name
   ebs_solution_stack_name   = var.ebs_solution_stack_name
   ebs_tags                  = local.common_tags
-  s3_bucket_id              = module.s3_staging.web_bucket.id
-  s3_bucket_object_id       = module.s3_staging.web_bucket_object.id
+  s3_bucket_id              = module.s3_bucket.web_bucket.id
+  s3_bucket_object_id       = module.s3_bucket.web_bucket_object.id
   ec2_instance_type         = var.ec2_instance_type
-  iam_instance_profile_name = aws_iam_instance_profile.ebs_ec2_profile.name
 } 

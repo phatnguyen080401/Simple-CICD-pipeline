@@ -1,20 +1,19 @@
 data "aws_elastic_beanstalk_hosted_zone" "current" {}
 
-resource "aws_elastic_beanstalk_application" "webapp" {
-  name        = var.ebs_name
-  description = "Simple Flask app"
+data "aws_elastic_beanstalk_application" "existing_application" {
+  name = var.ebs_app_name
 }
 
-resource "aws_elastic_beanstalk_environment" "staging_env" {
+resource "aws_elastic_beanstalk_environment" "ebs_env" {
   name                = "${terraform.workspace}-env"
-  application         = aws_elastic_beanstalk_application.webapp.name
+  application         = var.ebs_app_name 
   solution_stack_name = var.ebs_solution_stack_name
   tags                = var.ebs_tags
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "IamInstanceProfile"
-    value     = var.iam_instance_profile_name
+    value     = "aws-elasticbeanstalk-ec2-role"
   }
 
   setting {

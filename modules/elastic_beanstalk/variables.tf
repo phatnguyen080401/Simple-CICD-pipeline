@@ -1,4 +1,4 @@
-variable "ebs_name" {
+variable "ebs_app_name" {
   type = string
 }
 
@@ -21,9 +21,5 @@ variable "s3_bucket_object_id" {
 }
 
 variable "ec2_instance_type" {
-  type = string
-}
-
-variable "iam_instance_profile_name" {
   type = string
 }
