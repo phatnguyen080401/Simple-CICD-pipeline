@@ -3,9 +3,9 @@ output "hosted-zone" {
 }
 
 output "ebs_env_name" {
-  value = aws_elastic_beanstalk_environment.staging_env.name
+  value = aws_elastic_beanstalk_environment.ebs_env.name
 }
 
 output "ebs_cname" {
-  value = aws_elastic_beanstalk_environment.staging_env.cname
+  value = aws_elastic_beanstalk_environment.ebs_env.cname
 }
