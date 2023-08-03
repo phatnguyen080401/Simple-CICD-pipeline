@@ -40,10 +40,10 @@ jobs:
         with:
           terraform_wrapper: false
 
-      - name: Terraform current workspace
+      - name: Terraform workspace
         id: workspace
-        if: "$(terraform workspace show)" == "staging"
-        run: echo "In staging workspace"
+        run: |
+          echo "In workspace: $(terraform workspace show)"
 
       - name: Terraform init
         id: init
